@@ -1,8 +1,8 @@
 const express= require('express')
 const cors= require('cors')
-const bodyPraser= require('body-parser')
+const bodyParser= require('body-parser')
 const { sequelize, testConnection } = require('./database/db'); 
-const dressRoute = require('./routes/dresssRoutes');
+const dressRoute = require('./routes/dressRoutes');
 
 const path = require('path');
 const Dress = require('./model/dress');

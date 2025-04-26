@@ -13,7 +13,7 @@ exports.addDress = async (req, res) => {
         occasion ,
         last_worn_date ,
         times_worn ,
-        favorite ,      } = req.body;
+        favorite , } = req.body;
 
     const dressimage = req.file ? req.file.path : null;
 
