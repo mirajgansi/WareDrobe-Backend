@@ -41,8 +41,8 @@ exports.addDress = async (req, res) => {
 
 exports.getAllDress = async (req, res) => {
   try {
-    const Dress = await Dress.findAll({ attributes: { exclude: ["timestamps"] } }); // Exclude timestamps if needed
-    res.status(200).json(Dress);
+    const dress = await Dress.findAll({ attributes: { exclude: ["createdAt","updatedAt"] } }); // Exclude timestamps if needed
+    res.status(200).json(dress);
   } catch (err) {
     console.error("Error fetching Dress:", err);
     res.status(500).json({ error: err.message });
@@ -52,9 +52,9 @@ exports.getAllDress = async (req, res) => {
 // Get a single Dress by ID
 exports.getDressById = async (req, res) => {
   try {
-    const Dress = await Dress.findByPk(req.params.id); // ✅ Use `findByPk()`
-    if (!Dress) return res.status(404).json({ error: "Dress not found" });
-    res.status(200).json(Dress);
+    const dress = await Dress.findByPk(req.params.id); // ✅ Use `findByPk()`
+    if (!dress) return res.status(404).json({ error: "Dress not found" });
+    res.status(200).json(dress);
   } catch (err) {
     console.error("Error fetching Dress:", err);
     res.status(500).json({ error: err.message });
@@ -76,7 +76,7 @@ exports.getDressByName = async (req, res) => {
     console.log("Dress name after trimming:", DressName);
 
     // Perform the case-insensitive search using ILIKE
-    const Dress = await Dress.findAll({
+    const dress = await Dress.findAll({
       where: {
         Dress_name: {
           [Op.iLike]: `%${DressName}%`  // Case-insensitive search
@@ -88,12 +88,12 @@ exports.getDressByName = async (req, res) => {
     // Log the found Dress to see if they're being retrieved correctly
     console.log("Dress retrieved from the database:", Dress.map(Dress => Dress.Dress_name));
 
-    if (Dress.length === 0) {
+    if (dress.length === 0) {
       console.log("No Dress found with the name:", DressName);
       return res.status(404).json({ error: "No Dress found" });
     }
 
-    res.status(200).json(Dress);
+    res.status(200).json(dress);
   } catch (err) {
     console.error("Error fetching Dress:", err);
     res.status(500).json({ error: err.message });
@@ -104,10 +104,10 @@ exports.getDressByName = async (req, res) => {
 // Delete a Dress by ID
 exports.deleteDress = async (req, res) => {
   try {
-    const Dress = await Dress.findByPk(req.params.id);
-    if (!Dress) return res.status(404).json({ error: "Dress not found" });
+    const dress = await Dress.findByPk(req.params.id);
+    if (!dress) return res.status(404).json({ error: "Dress not found" });
 
-    await Dress.destroy(); // ✅ Use `destroy()` instead of `findByIdAndDelete()`
+    await dress.destroy(); // ✅ Use `destroy()` instead of `findByIdAndDelete()`
     res.status(200).json({ message: "Dress deleted successfully" });
   } catch (err) {
     console.error("Error deleting Dress:", err);
