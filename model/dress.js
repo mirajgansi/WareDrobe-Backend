@@ -1,6 +1,6 @@
-const { DataTypes } = require("sequelize");
-const { sequelize } = require("../database/db"); 
 
+import { DataTypes } from "sequelize";
+import { sequelize } from "../database/db.js";
 // sequelize.sync({alter:true})
 // .then(()=>{
 //     console.log("database table synced!");
@@ -32,4 +32,4 @@ const Dress = sequelize.define("dress", {
 }  
 );
 
-module.exports = Dress;
+export default Dress;

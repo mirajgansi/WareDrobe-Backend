@@ -1,5 +1,4 @@
-// Import Sequelize
-const { Sequelize } = require('sequelize');  // This imports the Sequelize class
+import { Sequelize } from "sequelize";
 
 // Create a new Sequelize instance
 const sequelize = new Sequelize(process.env.DB_NAME || 'MyWareDrobe', process.env.DB_USER || 'postgres', process.env.DB_PASSWORD || 'admin123', {
@@ -20,4 +19,4 @@ async function testConnection() {
 }
 
 // Export the sequelize instance and testConnection function
-module.exports = { sequelize, testConnection };
+export {sequelize, testConnection};

@@ -1,6 +1,6 @@
-const Dress = require("../model/dress");
+import Dress from "../model/dress.js"
 
-exports.addDress = async (req, res) => {
+const addDress = async (req, res) => {
   try {
     const {
         id ,
@@ -39,7 +39,7 @@ exports.addDress = async (req, res) => {
   }
 };
 
-exports.getAllDress = async (req, res) => {
+const getAllDress = async (req, res) => {
   try {
     const dress = await Dress.findAll({ attributes: { exclude: ["createdAt","updatedAt"] } }); // Exclude timestamps if needed
     res.status(200).json(dress);
@@ -49,8 +49,7 @@ exports.getAllDress = async (req, res) => {
   }
 };
 
-// Get a single Dress by ID
-exports.getDressById = async (req, res) => {
+ const getDressById = async (req, res) => {
   try {
     const dress = await Dress.findByPk(req.params.id); // ✅ Use `findByPk()`
     if (!dress) return res.status(404).json({ error: "Dress not found" });
@@ -61,9 +60,10 @@ exports.getDressById = async (req, res) => {
   }
 };
 
-const { Op } = require("sequelize");
 
-exports.getDressByName = async (req, res) => {
+import { Op } from "sequelize";
+
+const getDressByName = async (req, res) => {
   try {
     const DressName = req.params.Dress_name.trim();  // Trim spaces from Dress name
     console.log("Searching for Dress:", DressName);
@@ -102,7 +102,7 @@ exports.getDressByName = async (req, res) => {
 
 
 // Delete a Dress by ID
-exports.deleteDress = async (req, res) => {
+ const deleteDress = async (req, res) => {
   try {
     const dress = await Dress.findByPk(req.params.id);
     if (!dress) return res.status(404).json({ error: "Dress not found" });
@@ -113,4 +113,64 @@ exports.deleteDress = async (req, res) => {
     console.error("Error deleting Dress:", err);
     res.status(500).json({ error: err.message });
   }
+};
+
+const updateDress = async (req, res) => {
+  try {
+      const id = decodeURIComponent(req.params.id);
+      // console.log("Updating profile picture for email:", email);
+      // console.log("File Uploaded:", req.file);
+    
+      const {
+        name ,
+        date ,
+        comment ,
+        category ,
+        season ,
+        brand ,
+        occasion ,
+        last_worn_date ,
+        times_worn ,
+        favorite 
+      } = req.body
+
+      const dressimage = req.file ? req.file.filename:null;
+      
+      const dress = await Dress.findOne({where:{id}});
+      if(!dress){
+        return res.status(404).json({ message: "Dress not found" });
+      }
+      
+      dress.name = name || dress.name;
+      dress.date = date || dress.date;
+      dress.comment = comment || dress.comment;
+      dress.category = category || dress.category;
+      dress.season = season || dress.season;
+      dress.brand = brand || dress.brand;
+      dress.occasion = occasion || dress.occasion;
+      dress.last_worn_date = last_worn_date || dress.last_worn_date;
+      dress.times_worn = times_worn || dress.times_worn;
+      dress.favorite = favorite || dress.favorite;
+      if(dressimage){
+        dress.dressimage= dressimage;
+      }
+      await dress.save();
+      res.json({
+        message: "Dress updated successfully",
+        updateDress:dress
+      });
+    }
+    catch (err) {
+      console.error("Error updating dress:", error);
+      res.status(500).json({message:"update failed",error:error.message});
+    }
+  };
+
+export default {
+  addDress,
+  getAllDress,
+  getDressById,
+  getDressByName,
+  deleteDress,
+  updateDress,
 };
